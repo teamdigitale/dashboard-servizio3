@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@plugin "daisyui" {
+  themes: italia, dim;
+}
+
+@plugin "daisyui/theme" {
+  name: "italia";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: oklch(99% 0 0);
+  --color-base-200: oklch(98% 0 0);
+  --color-base-300: oklch(97% 0 0);
+  --color-base-content: #212529;
+  --color-primary: #0066cc;
+  --color-primary-content: #ffffff;
+  --color-secondary: #5d7083;
+  --color-secondary-content: #fff;
+  --color-accent: #0066cc;
+  --color-accent-content: #fff;
+  --color-neutral: #333333;
+  --color-neutral-content: #ffffff;
+  --color-info: #17a2b8;
+  --color-info-content: #ffffff;
+  --color-success: #28a745;
+  --color-success-content: #ffffff;
+  --color-warning: #ffc107;
+  --color-warning-content: #333333;
+  --color-error: #dc3545;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+
+  --depth: 1;
+  --noise: 0;
+}
+
+html {
+  font-size: 1.2rem;
+}
+
+.gradientBg {
+  height: 100%;
+  background: linear-gradient(-45deg, #F7A72B, #F1429B, #20A1E4, #17D39D);
+  background-size: 500% 100%;
+  animation: gradient 20s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.focus-within\\:scale-x-100:focus-within {
+  transform: scaleX(1);
+}
