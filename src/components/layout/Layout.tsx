@@ -15,14 +15,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const currentTheme = settings?.preferredTheme === "dark" ? "dim" : "italia";
   return (
     <div
-      className='layout min-h-screen bg-base-100 flex flex-col'
+      className='bg-base-100 flex flex-col h-screen w-screen overflow-hidden max-h-screen max-w-screen'
       data-theme={currentTheme}
     >
-      <div className='sticky top-0 z-50 shadow-md'>
+      <div className='shadow-md h-16 w-full flex-shrink-0'>
         <Navbar currentTheme={settings?.preferredTheme || "light"} />
       </div>
-      <div className='bg-base-100 p-4 md:py-8 h-full grow-1 '>{children}</div>
-      <footer className='footer footer-center p-4 bg-primary text-primary-content border-t border-primary mt-4'>
+      <div className='grow-1 overflow-y-auto'>{children}</div>
+      <footer className='h-16 w-full flex-shrink-0 footer footer-center p-4 bg-base-200 text-content border-t border-content'>
         <div>
           <p>{new Date().getFullYear()} - Servizio3.</p>
         </div>

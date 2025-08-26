@@ -17,7 +17,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   // If a user is logged in, render the child component
-  return <>{children}</>;
+  // return <>{children}</>;
+
+  return (
+    <div className='flex h-full w-full'>
+      <div className='hidden md:flex bg-base-300 text-content md:w-56 border-r mr-4 p-4 flex-col '>
+        <div>SIDEBAR</div>
+      </div>
+      <div className='w-full h-full overflow-y-auto'>{children}</div>
+    </div>
+  );
 };
 
 export default ProtectedRoute;
