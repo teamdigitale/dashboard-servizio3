@@ -22,10 +22,6 @@ const paths = [
         path: "",
         label: "Cccccccccccc",
       },
-      {
-        path: "",
-        label: "Dddddddddddd",
-      },
     ],
   },
 ];
