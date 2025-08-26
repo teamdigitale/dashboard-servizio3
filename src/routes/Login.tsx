@@ -2,6 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/user_store";
+import type { Event } from "hono/jsx";
 
 const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
 const mockUser = {
@@ -16,7 +17,8 @@ const Login: React.FC = () => {
   const { setUser } = useUserStore();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = (e: Event) => {
+    e.preventDefault();
     // In a real app, you would perform authentication here
     console.log("Logging in...");
     setUser(mockUser);
@@ -44,7 +46,11 @@ const Login: React.FC = () => {
 
       <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]'>
         <div className='bg-base-300 text-content px-6 py-12 shadow sm:rounded-lg sm:px-12'>
-          <form action='#' onSubmit={handleLogin} className='space-y-6'>
+          <form
+            action='#'
+            onSubmit={(e) => handleLogin(e)}
+            className='space-y-6'
+          >
             <div>
               <label htmlFor='email' className='block text-sm/6  '>
                 Email address
