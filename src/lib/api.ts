@@ -1,13 +1,11 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-
 /** getSuggestions */
 export async function getSuggestions(inputData: (string | number)[][]) {
   // const token = auth.getAuth();
   // if (!token) return null;
-  const url = `${SERVER_URL}/hints/`;
+  const url = `/hints/`;
   const data = JSON.stringify(inputData.slice(0, 5));
   const response = await axios.post(url, data);
   console.log("hints", response.status);
@@ -24,7 +22,7 @@ export async function getSuggestions(inputData: (string | number)[][]) {
 export async function upsertChart(payload: object, id?: string) {
   // const token = auth.getAuth();
   // if (!token) return null;
-  const url = id ? `${SERVER_URL}/charts/${id}` : `${SERVER_URL}/charts/`;
+  const url = id ? `/charts/${id}` : `/charts/`;
   const method = id ? "PUT" : "POST";
 
   const response = await (method === "PUT"
@@ -44,7 +42,7 @@ export async function upsertChart(payload: object, id?: string) {
 
 /** Delete */
 export async function deleteChart(id: string) {
-  const response = await axios.delete(`${SERVER_URL}/charts/${id}`);
+  const response = await axios.delete(`/charts/${id}`);
   console.log("deleteChart", response.status);
   if (response.status === 401) {
     return logout();
@@ -57,7 +55,7 @@ export async function deleteChart(id: string) {
 
 /** List */
 export async function getCharts() {
-  const response = await axios.get(`${SERVER_URL}/charts`);
+  const response = await axios.get(`/charts`);
 
   if (response.status === 401) {
     // return auth.logout();
@@ -71,7 +69,7 @@ export async function getCharts() {
 }
 
 export async function getUser() {
-  const response = await axios(`${SERVER_URL}/auth/user`, {
+  const response = await axios(`/auth/user`, {
     method: "GET",
   });
   console.log("response status", response.status);
@@ -80,7 +78,7 @@ export async function getUser() {
 }
 
 export function logout() {
-  return axios.get(`${SERVER_URL}/auth/logout`);
+  return axios.get(`/auth/logout`);
 }
 
 /** Login */
@@ -92,7 +90,7 @@ export async function login({
   password: string;
   rememberMe?: boolean;
 }) {
-  const response = await axios.post(`${SERVER_URL}/auth/login`, {
+  const response = await axios.post(`/auth/login`, {
     email,
     password,
   });
@@ -116,7 +114,7 @@ export async function register({
   password: string;
 }) {
   try {
-    const response = await axios.post(`${SERVER_URL}/auth/register`, {
+    const response = await axios.post(`/auth/register`, {
       email,
       password,
     });
@@ -132,7 +130,7 @@ export async function register({
 }
 
 export async function showChart(id: string) {
-  const response = await axios(`${SERVER_URL}/charts/show/${id}`, {
+  const response = await axios(`/charts/show/${id}`, {
     method: "GET",
   });
   if (response.status === 200) {
@@ -147,7 +145,7 @@ export async function showChart(id: string) {
 
 export async function verify({ uid, code }: { uid: string; code: string }) {
   try {
-    const response = await axios.post(`${SERVER_URL}/auth/verify`, {
+    const response = await axios.post(`/auth/verify`, {
       uid,
       code,
     });
@@ -163,7 +161,7 @@ export async function verify({ uid, code }: { uid: string; code: string }) {
 
 export async function changePasssword({ password }: { password: string }) {
   try {
-    const response = await axios.post(`${SERVER_URL}/auth/pwd`, {
+    const response = await axios.post(`/auth/pwd`, {
       password,
     });
     if (response.status === 200) {
@@ -177,7 +175,7 @@ export async function changePasssword({ password }: { password: string }) {
 
 export async function activate() {
   try {
-    const response = await axios.post(`${SERVER_URL}/auth/init`);
+    const response = await axios.post(`/auth/init`);
     if (response.status === 200) {
       return true;
     }
@@ -189,7 +187,7 @@ export async function activate() {
 
 export async function recoverPasssword(email: string) {
   try {
-    const response = await axios.post(`${SERVER_URL}/auth/recover`, { email });
+    const response = await axios.post(`/auth/recover`, { email });
     if (response.status === 200) {
       return true;
     }
