@@ -11,12 +11,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user } = useUserStore();
   const [path, setPath] = React.useState<string>('');
 
-  if (!user) {
-    // If no user is logged in, redirect to the /login page
-    // 'replace' prevents the user from navigating back to the protected route
-    return <Navigate to='/login' replace />;
-  }
-
   useEffect(() => {
     const url = window.location.href;
     console.log('Current URL:', url);
@@ -26,6 +20,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }, []);
   // If a user is logged in, render the child component
   // return <>{children}</>;
+
+  if (!user) {
+    // If no user is logged in, redirect to the /login page
+    // 'replace' prevents the user from navigating back to the protected route
+    return <Navigate to='/login' replace />;
+  }
 
   return (
     <div className='flex h-full w-full'>
