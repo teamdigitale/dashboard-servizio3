@@ -1,26 +1,26 @@
-import { useUserStore } from "../../store/user_store";
-import ThemeChooser from "./ThemeChooser";
+import { useUserStore } from '../../store/user_store';
+import ThemeChooser from './ThemeChooser';
 
 const paths = [
   {
-    path: "",
-    label: "home",
+    path: '',
+    label: 'home',
   },
   {
-    path: "#",
-    label: "Other Pages",
+    path: '#',
+    label: 'Other Pages',
     sub: [
       {
-        path: "",
-        label: "Aaaaaaaaaaaaa",
+        path: '',
+        label: 'Aaaaaaaaaaaaa',
       },
       {
-        path: "",
-        label: "Bbbbbbbbbbbb",
+        path: '',
+        label: 'Bbbbbbbbbbbb',
       },
       {
-        path: "",
-        label: "Cccccccccccc",
+        path: '',
+        label: 'Cccccccccccc',
       },
     ],
   },
@@ -48,7 +48,7 @@ export default function NavBar({ currentTheme }: { currentTheme: string }) {
                 strokeLinejoin='round'
                 strokeWidth='2'
                 d='M4 6h16M4 12h8m-8 6h16'
-              />{" "}
+              />{' '}
             </svg>
           </div>
           <ul
@@ -86,7 +86,7 @@ export default function NavBar({ currentTheme }: { currentTheme: string }) {
           </ul>
         </div>
         <a className='btn btn-ghost text-2xl' href='/'>
-          Servizio3
+          Dashboard
         </a>
       </div>
       <div className='navbar-center hidden lg:flex'>
