@@ -37,7 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
               !path || path == '/' ? 'link-disabled' : 'link link-primary'
             } `}
           >
-            SERVIZIO 3
+            FONDO PNRR
           </a>
         </div>
         <div>
@@ -47,7 +47,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
               path.indexOf('/pa26') >= 0 ? 'link-disabled' : 'link link-primary'
             } `}
           >
-            PA DIGITALE 2026
+            LUMP SUM
           </a>
         </div>
       </div>

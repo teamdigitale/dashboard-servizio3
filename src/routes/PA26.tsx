@@ -1,4 +1,5 @@
 import DashChart from '../components/DashChart';
+import { KpiItem, type KpiItemType } from 'dataviz-components';
 const ids = [
   'cm8zqd7w90001tfdxnt74uyuj',
   'cm2w17md9000113laexq0h432',
@@ -7,35 +8,29 @@ const ids = [
   'cm92staor00056c5hvwfpvubg',
 ];
 
-import { KpiItem } from 'dataviz-components';
+const stats: KpiItemType[] = [
+  { title: 'Risorse allocate', value: '2773 milioni ', value_prefix: '€ ' },
+  { title: 'Risorse liquidate', value: '1468  milioni', value_prefix: '€ ' },
+  { title: 'Enti registrati', value: 23736 },
+  { title: 'Utenti registrati', value: 36881 },
+  { title: 'Progetti attivi', value: 81063 },
+  {
+    title: 'Richieste risolte',
+    value: 72377,
+  },
+];
 
 function App() {
   return (
     <div>
       <div className='grid grid-cols-1 gap-4 m-6 ml-2 sm:grid-cols-2 lg:grid-cols-3'>
-        {[1, 2, 3, 4, 5, 6].map((item) => (
+        {stats.map((item) => (
           <div
             className='flex items-center justify-center w-full  h-24 bg-base-300 text-content rounded-md  shadow-md'
             key={`stat-${item}`}
           >
             <div className='text-2xl '>
-              <KpiItem
-                data={{
-                  'title':
-                    item === 1
-                      ? 'Attive'
-                      : item === 2
-                      ? 'Completate'
-                      : item === 3
-                      ? 'In Corso'
-                      : item === 4
-                      ? 'Adesione'
-                      : item === 5
-                      ? 'Richieste'
-                      : 'Rifiutate',
-                  'value': Math.floor(Math.random() * 10000),
-                }}
-              />
+              <KpiItem data={item} />
             </div>
           </div>
         ))}
