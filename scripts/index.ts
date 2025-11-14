@@ -1,40 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Papa from "papaparse";
-import Bun from "bun";
+
 import { D } from "@mobily/ts-belt";
+import Bun from "bun";
+import Papa from "papaparse";
 
-// async function createChart1(rawData) {
-// 	const chart1: object[] = rawData.map((i: object) => {
-// 		const obj = {};
-// 		obj["totale"] = i["totale"];
-// 		obj["cd_intervento"] = i["cd_intervento"];
-// 		return obj;
-// 	});
-
-// 	const chart1Grouped = chart1.reduce((prev, obj) => {
-// 		const acc = prev as object[];
-// 		const str = obj["cd_intervento"] + "";
-// 		const index = acc.findIndex((i) => i["cd_intervento"] === str);
-// 		if (index > -1) {
-// 			const value = prev[index]["totale"];
-// 			obj["totale"] += value;
-// 			acc.splice(index);
-// 		}
-// 		acc.push(obj);
-// 		return acc;
-// 	}, [] as object[]);
-
-// 	const chart1Formatted = (chart1Grouped as [object]).map((item) => {
-// 		const value = Math.round(item["totale"]);
-// 		return {
-// 			...item,
-// 			["totale"]: value,
-// 		};
-// 	});
-
-// 	const chart1Data = toMatrixFormat(chart1Formatted);
-// 	await writeToFile("chart1.json", JSON.stringify(chart1Data, null, 2));
-// }
+function slugify(text: string) {
+	return text
+		.toString()
+		.toLowerCase()
+		.replace(/\s+/g, "-") // Replace spaces with -
+		.replace(/[^\w-]+/g, "") // Remove all non-word chars
+		.replace(/--+/g, "-") // Replace multiple - with single -
+		.replace(/^-+/, "") // Trim - from start of text
+		.replace(/-+$/, ""); // Trim - from end of text
+}
 
 export function parse(data) {
 	return new Promise((resolve, reject) => {
@@ -55,9 +34,7 @@ export function parse(data) {
 export async function preprocess(file: string) {
 	const data = (await getOpendataFile(file)) as [[]];
 	if (data.length < 2) return;
-	const keys = (data[0] as string[]).map((k) =>
-		k.toLowerCase().split(" ").join("-"),
-	);
+	const keys = (data[0] as string[]).map((k) => slugify(k));
 	const json = data.slice(1).map((row) => {
 		const pairs = keys.map((k, index) => {
 			let value = row[index] || 0;
@@ -101,6 +78,12 @@ export function removeCols(data: object[], toRemove: string[]) {
 			delete item[col];
 		});
 		return item;
+	});
+}
+
+export function selectCols(data: object[], keys: readonly string[]) {
+	return data.map((item: object) => {
+		return D.selectKeys(item, keys as readonly never[]);
 	});
 }
 
@@ -149,27 +132,6 @@ function getUniqFieldValues(array, field) {
 	);
 }
 
-function groupByAndSum(data: object[], groupByField: string, sumField: string) {
-	const grouped = data.reduce(
-		(acc, item) => {
-			const key = item[groupByField];
-			if (!acc[key]) {
-				acc[key] = 0;
-			}
-			acc[key] += item[sumField];
-			return acc;
-		},
-		{} as Record<string, number>,
-	);
-
-	const result = Object.keys(grouped).map((key) => ({
-		[groupByField]: key,
-		[sumField]: grouped[key],
-	}));
-
-	return result;
-}
-
 function aggregate(data: object[], groupByField: string) {
 	const grouped = data.reduce((group, obj) => {
 		const value = obj[groupByField];
@@ -179,8 +141,6 @@ function aggregate(data: object[], groupByField: string) {
 		group[value].push(obj);
 		return group;
 	}, []);
-
-	console.log("grouped  :", grouped);
 
 	const result = Object.values(grouped).reduce((acc, items) => {
 		const aggregatedItem = { [groupByField]: items[0][groupByField] };
@@ -214,118 +174,96 @@ function cleanupCurrency(value: string | number) {
 	return Number(num);
 }
 
-async function chart1() {
-	const sampleFile = "251024_Pagamenti_PCM_DTD_refined.csv";
-	const rawData = await preprocess(sampleFile);
-	console.log("rawData length:", rawData.length);
-	const filtered = filterByCondition(
-		rawData,
-		"progetto-validato",
-		(v) => v === "Si",
-	);
-	console.log("filtered length:", filtered.length);
-	const cleaned = cleanupColumn(
-		rawData,
-		"pagamenti-ammessi-pnrr-per-anno",
-		(v) => {
-			const num = (`${v}` satisfies string)
-				.replace("€", "")
-				.replace(".", "")
-				.replace(",", ".")
-				.replace(" ", "")
-				.trim();
-
-			return Number(num);
-		},
-	)
-		.filter((item) => !isNaN(item["pagamenti-ammessi-pnrr-per-anno"]))
-		.filter((item) => item["pagamenti-ammessi-pnrr-per-anno"] > 0);
-	console.log("cleaned length:", cleaned.length);
-	const data = removeCols(cleaned, [
-		"cup",
-		"data-di-estrazione",
-		"anno-pagamento",
-		"progetto-validato",
-		"pagamenti-totali-per-anno",
-	]);
-	await writeToFile("rawData.json", JSON.stringify(data.slice(-150), null, 2));
-	console.log(JSON.stringify(data.slice(-5), null, 2));
-
-	const uniq = getUniqValues(data, "codice-univoco-submisura");
-	console.log(uniq);
-
-	const aggregated = aggregate(data, "codice-univoco-submisura");
-	console.log("aggregated length:", aggregated.length);
-	await writeToFile(
-		"costi-per-misura_pnrr.json",
-		JSON.stringify(toMatrixFormat(aggregated), null, 2),
-	);
-}
-
-function cleanAllFields(fields: string[], data: object[]) {
+function cleanCurrencyFields(fields: string[], data: object[]) {
 	let cleaned = data;
 	fields.forEach((field) => {
 		cleaned = cleanupColumn(cleaned, field, cleanupCurrency)
 			.filter((item) => !isNaN(item[field]))
-			.filter((item) => item[field] > 0);
+			.filter((item) => item[field] >= 0);
 		console.log(`cleaned length for field ${field}:`, cleaned.length);
 	});
 	return cleaned;
 }
 
+async function chart1() {
+	const sampleFile = "251024_Pagamenti.csv";
+	const rawData = await preprocess(sampleFile);
+
+	const filtered = filterByCondition(
+		rawData,
+		"progetto-validato",
+		(v) => v === "Si",
+	);
+
+	const cleaned = cleanCurrencyFields(
+		["pagamenti-ammessi-pnrr-per-anno"],
+		filtered,
+	);
+
+	const data = selectCols(cleaned, [
+		"codice-univoco-submisura",
+		"descrizione-submisura",
+		"pagamenti-ammessi-pnrr-per-anno",
+	]);
+
+	// await writeToFile("rawData.json", JSON.stringify(data.slice(-15), null, 2));
+
+	const uniq = getUniqValues(data, "codice-univoco-submisura");
+	console.log(uniq);
+
+	const aggregated = aggregate(data, "codice-univoco-submisura");
+	// await writeToFile(
+	// 	"pagamenti-per-sottomisura.json",
+	// 	JSON.stringify(toMatrixFormat(aggregated), null, 2),
+	// );
+	return aggregated;
+}
 async function chart2() {
-	const sampleFile = "251024_Progetti_PCM_DTD_refined.csv";
+	const sampleFile = "251024_Progetti.csv";
 	const rawData = await preprocess(sampleFile);
 	console.log("rawData length:", rawData.length);
-	await writeToFile(
-		"rawData.json",
-		JSON.stringify(rawData.slice(-150), null, 2),
-	);
-	console.log(JSON.stringify(rawData.slice(-15), null, 2));
+
 	const uniq = getUniqValues(rawData, "stato-avanzamento-progetto");
 	console.log(uniq);
 
-	// const filtered = filterByCondition(
-	// 	rawData,
-	// 	"progetto validato",
-	// 	(v) => v === "Si",
-	// );
-	// console.log("filtered length:", filtered.length);
-
-	const cleaned = cleanAllFields(
-		[
-			"finanziamento-pnrr",
-			"finanziamento-pnc",
-			"altri-fondi",
-			"finanziamento-totale",
-		],
+	const cleaned = cleanCurrencyFields(
+		["finanziamento-totale-pubblico-netto"],
 		rawData,
 	);
 
-	console.log("cleaned length:", cleaned.length);
-	const data = removeCols(cleaned, [
-		"id-misura",
-		"stato-cup",
-		"stato-avanzamento-progetto",
-		"cup-descrizione-natura",
-		"finanziamento-totale-pubblico",
+	const data = selectCols(cleaned, [
+		"codice-univoco-misura",
+		"descrizione-misura",
+		"codice-univoco-submisura",
+		"descrizione-submisura",
 		"finanziamento-totale-pubblico-netto",
 	]);
 
-	await writeToFile("rawData.json", JSON.stringify(data.slice(-150), null, 2));
+	await writeToFile("rawData.json", JSON.stringify(data.slice(-15), null, 2));
 
-	// const aggregated = aggregate(data, "codice-univoco-misura");
-	// console.log("aggregated length:", aggregated.length);
+	const aggregated = aggregate(data, "codice-univoco-submisura");
+
 	// await writeToFile(
-	// 	"costi-progetti-per-misura_pnrr.json",
+	// 	"progetti-per-sottomisura.json",
 	// 	JSON.stringify(toMatrixFormat(aggregated), null, 2),
 	// );
+	return aggregated;
 }
 
 (async () => {
 	const start = Date.now();
-	// await chart1(); // sottomisure e pagamenti totali del doeriodo temoprale
-	await chart2(); // riportare le misure e interare i costi publici netti cpn i pagamenti  per ogni misura Finanziamento Totale Pubblico Netto
+	const d1 = await chart1(); // sottomisure e pagamenti totali del doeriodo temoprale
+	const d2 = await chart2(); // sottomisure e pagamenti totali del doeriodo temoprale
+	// await chart2(); // riportare le misure e interare i costi publici netti cpn i pagamenti  per ogni misura Finanziamento Totale Pubblico Netto
+
+	const d3 = d2.map((item) => {
+		const matched = d1.find(
+			(i) => i["codice-univoco-submisura"] === item["codice-univoco-submisura"],
+		);
+		return D.merge(matched || {}, item);
+	});
+
+	await writeToFile("rawData.json", JSON.stringify(d3, null, 2));
 
 	//chart3 per ente attuatore  costi
 	const elapsed = Math.ceil((Date.now() - start) / 60000);
