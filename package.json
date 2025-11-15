@@ -21,6 +21,7 @@
     "react-router-dom": "^7.8.1",
     "swr": "^2.3.6",
     "tailwindcss": "^4.1.12",
+    "uuidv7": "^1.0.2",
     "zod": "^4.0.17",
     "zustand": "^5.0.8"
   },

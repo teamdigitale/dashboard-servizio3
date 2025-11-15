@@ -1,112 +1,104 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/** biome-ignore-all lint/correctness/noUnusedVariables: <explanation> */
+// import { F } from "@mobily/ts-belt";
 import React from "react";
-import DataTable, { createTheme } from "react-data-table-component";
-import data from "./sample.ts";
+import DataTable from "react-data-table-component";
+import { uuidv7 } from "uuidv7";
+// import { createTheme } from "react-data-table-component";
+import {
+	capitalize,
+	downloadCSV,
+	getColumns,
+	removeArraysFromObjects,
+	selectCols,
+} from "../lib/utils.ts";
+import sample from "./sample.ts";
 
-createTheme(
-	"solarized",
-	{
-		text: {
-			primary: "#add226ff",
-			secondary: "#2aa198",
-		},
-		background: {
-			default: "#002b36",
-		},
-		context: {
-			background: "#16cb95ff",
-			text: "#FFFFFF",
-		},
-		divider: {
-			default: "#073642",
-		},
-		action: {
-			button: "rgba(0,0,0,.54)",
-			hover: "rgba(0,0,0,.08)",
-			disabled: "rgba(0,0,0,.12)",
-		},
-	},
-	"dark",
-);
+// createTheme(
+// 	"solarized",
+// 	{
+// 		text: {
+// 			primary: "#add226ff",
+// 			secondary: "#2aa198",
+// 		},
+// 		background: {
+// 			default: "#002b36",
+// 		},
+// 		context: {
+// 			background: "#16cb95ff",
+// 			text: "#FFFFFF",
+// 		},
+// 		divider: {
+// 			default: "#073642",
+// 		},
+// 		action: {
+// 			button: "rgba(0,0,0,.54)",
+// 			hover: "rgba(0,0,0,.08)",
+// 			disabled: "rgba(0,0,0,.12)",
+// 		},
+// 	},
+// 	"dark",
+// );
 
 export default function DataTableWrap() {
-	function convertArrayOfObjectsToCSV(array: object[][]) {
-		let result = "";
+	const data = removeArraysFromObjects(sample);
+	const [selectedColumns, setSelectedColumns] = React.useState<string[]>(
+		Object.keys(data[0]),
+	);
 
-		const columnDelimiter = ",";
-		const lineDelimiter = "\n";
-		const keys = Object.keys(data[0]);
-
-		result = "";
-		result += keys.join(columnDelimiter);
-		result += lineDelimiter;
-
-		array.forEach((item) => {
-			let ctr = 0;
-			keys.forEach((key) => {
-				if (ctr > 0) result += columnDelimiter;
-
-				result += item[key];
-				// eslint-disable-next-line no-plusplus
-				ctr++;
-			});
-			result += lineDelimiter;
-		});
-
-		return result;
-	}
-
-	// Blatant "inspiration" from https://codepen.io/Jacqueline34/pen/pyVoWr
-	function downloadCSV(array: object[][]) {
-		const link = document.createElement("a");
-		let csv = convertArrayOfObjectsToCSV(array);
-		if (csv == null) return;
-
-		const filename = "export.csv";
-
-		if (!csv.match(/^data:text\/csv/i)) {
-			csv = `data:text/csv;charset=utf-8,${csv}`;
+	const handleColumnToggle = (column: string) => {
+		if (selectedColumns.includes(column)) {
+			setSelectedColumns(selectedColumns.filter((col) => col !== column));
+		} else {
+			setSelectedColumns([...selectedColumns, column]);
 		}
+	};
 
-		link.setAttribute("href", encodeURI(csv));
-		link.setAttribute("download", filename);
-		link.click();
+	function changeColumnsOrder(newOrder: string[]) {
+		console.log("New order:", newOrder);
+		setSelectedColumns(newOrder);
 	}
 
-	// const selectableRowsComponentProps = React.useMemo(
-	// 	() => ({
-	// 		type: selectableRowsRadio ? "radio" : "checkbox",
-	// 	}),
-	// 	[selectableRowsRadio],
-	// );
+	// Throttle function to limit the rate of function calls
+	const throttle = (func, limit) => {
+		let inThrottle;
+		return (...args) => {
+			if (!inThrottle) {
+				func(...args);
+				inThrottle = true;
+				setTimeout(() => (inThrottle = false), limit);
+			}
+		};
+	};
 
-	const columns = [
-		{
-			name: "Title",
-			selector: (row: object) => row.title,
-			sortable: true,
-			reorder: true,
-		},
-		{
-			name: "Director",
-			selector: (row: object) => row.director,
-			sortable: true,
-			reorder: true,
-		},
-		{
-			name: "Year",
-			selector: (row: object) => row.year,
-			sortable: true,
-			reorder: true,
-		},
-	];
+	const columns = getColumns(data);
+	const filteredColumns = columns.filter((col) =>
+		selectedColumns.includes(col.name.toLowerCase()),
+	);
+
+	const changeColsSort = throttle((cols: object[]) => {
+		const newOrder = cols.map((col) => col.name.toLowerCase());
+		changeColumnsOrder(newOrder);
+	}, 500);
 
 	return (
 		<div className="m-10 p-10">
+			<div>
+				{Object.keys(data[0]).map((key) => (
+					<div key={key} className="inline-block mr-4">
+						<label className="mr-2">
+							<input
+								type="checkbox"
+								checked={selectedColumns.includes(key)}
+								onChange={() => handleColumnToggle(key)}
+							/>
+							{`${capitalize(key)}`}
+						</label>
+					</div>
+				))}
+			</div>
+			<hr className="hr" />
 			<DataTable
 				title="Movie List"
-				columns={columns}
+				columns={filteredColumns}
 				data={data}
 				defaultSortFieldId={1}
 				// selectableRows={selectableRows}
@@ -118,8 +110,22 @@ export default function DataTableWrap() {
 				fixedHeader={true}
 				fixedHeaderScrollHeight={"500px"}
 				responsive={true}
+				onColumnOrderChange={(cols) => changeColsSort}
 				// theme="dark"
 			/>
+			<hr className="hr" />
+			<button
+				type="button"
+				className="btn btn-primary"
+				onClick={() =>
+					downloadCSV(
+						selectCols(data, selectedColumns),
+						`${uuidv7()}-data-table-export.csv`,
+					)
+				}
+			>
+				Download CSV
+			</button>
 		</div>
 	);
 }
