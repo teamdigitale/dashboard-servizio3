@@ -1,8 +1,7 @@
 // import { F } from "@mobily/ts-belt";
 import React from "react";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme } from "react-data-table-component";
 import { uuidv7 } from "uuidv7";
-// import { createTheme } from "react-data-table-component";
 import {
 	capitalize,
 	downloadCSV,
@@ -10,35 +9,37 @@ import {
 	removeArraysFromObjects,
 	selectCols,
 } from "../lib/utils.ts";
+import { useSettingsStore } from "../store/settings_store.ts";
 import sample from "./sample.ts";
 
-// createTheme(
-// 	"solarized",
-// 	{
-// 		text: {
-// 			primary: "#add226ff",
-// 			secondary: "#2aa198",
-// 		},
-// 		background: {
-// 			default: "#002b36",
-// 		},
-// 		context: {
-// 			background: "#16cb95ff",
-// 			text: "#FFFFFF",
-// 		},
-// 		divider: {
-// 			default: "#073642",
-// 		},
-// 		action: {
-// 			button: "rgba(0,0,0,.54)",
-// 			hover: "rgba(0,0,0,.08)",
-// 			disabled: "rgba(0,0,0,.12)",
-// 		},
-// 	},
-// 	"dark",
-// );
+createTheme(
+	"black",
+	{
+		text: {
+			primary: "rgba(255,255,255, 0.54)",
+			secondary: "rgba(255,255,255, 0.54)",
+			disabled: "rgba(255,255,255, 0.38)",
+		},
+		background: {
+			default: "#trasnparent",
+		},
+		divider: {
+			default: "rgba(255,255,255,.075)",
+		},
+		highlightOnHover: {
+			default: "rgba(255,255,255,.03)",
+			text: "#fff",
+		},
+	},
+	"dark",
+);
 
 export default function DataTableWrap() {
+	const { settings } = useSettingsStore();
+
+	const currentTheme =
+		settings?.preferredTheme === "dark" ? "black" : "default";
+
 	const data = removeArraysFromObjects(sample);
 	const [selectedColumns, setSelectedColumns] = React.useState<string[]>(
 		Object.keys(data[0]),
@@ -54,7 +55,7 @@ export default function DataTableWrap() {
 
 	function changeColumnsOrder(newOrder: string[]) {
 		console.log("New order:", newOrder);
-		setSelectedColumns(newOrder);
+		// setSelectedColumns(newOrder);
 	}
 
 	// Throttle function to limit the rate of function calls
@@ -100,23 +101,25 @@ export default function DataTableWrap() {
 				title="Movie List"
 				columns={filteredColumns}
 				data={data}
-				defaultSortFieldId={1}
+				// defaultSortFieldId={1}
 				// selectableRows={selectableRows}
+				// striped={true}
+				// pointerOnHover={true}
 				pagination={true}
 				highlightOnHover={true}
-				striped={true}
-				pointerOnHover={true}
 				dense={true}
 				fixedHeader={true}
-				fixedHeaderScrollHeight={"500px"}
+				fixedHeaderScrollHeight={"400px"}
 				responsive={true}
-				onColumnOrderChange={(cols) => changeColsSort}
-				// theme="dark"
+				onColumnOrderChange={(cols) =>
+					changeColumnsOrder(cols.map((c) => c.name.toLowerCase()))
+				}
+				theme={currentTheme}
 			/>
 			<hr className="hr" />
 			<button
 				type="button"
-				className="btn btn-primary"
+				className="btn btn-primary my-10"
 				onClick={() =>
 					downloadCSV(
 						selectCols(data, selectedColumns),
