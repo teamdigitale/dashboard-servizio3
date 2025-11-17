@@ -6,12 +6,15 @@ export function toMatrixFormat(data: object[]) {
 	return [keys, ...rest];
 }
 
-export function convertArrayOfObjectsToCSV(array: object[][]) {
+export function convertArrayOfObjectsToCSV(
+	array: object[][],
+	sortedKeys?: string[],
+) {
 	let result = "";
 
 	const columnDelimiter = ",";
 	const lineDelimiter = "\n";
-	const keys = Object.keys(array[0]);
+	const keys = sortedKeys || Object.keys(array[0]);
 
 	result = "";
 	result += keys.join(columnDelimiter);
@@ -33,9 +36,13 @@ export function convertArrayOfObjectsToCSV(array: object[][]) {
 }
 
 // Blatant "inspiration" from https://codepen.io/Jacqueline34/pen/pyVoWr
-export function downloadCSV(array: object[][], filename: string) {
+export function downloadCSV(
+	array: object[][],
+	filename: string,
+	sortedKeys?: string[],
+) {
 	const link = document.createElement("a");
-	let csv = convertArrayOfObjectsToCSV(array);
+	let csv = convertArrayOfObjectsToCSV(array, sortedKeys);
 	if (csv == null) return;
 
 	if (!csv.match(/^data:text\/csv/i)) {

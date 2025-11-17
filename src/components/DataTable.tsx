@@ -1,8 +1,9 @@
 // import { F } from "@mobily/ts-belt";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { uuidv7 } from "uuidv7";
 import {
+	aggregate,
 	capitalize,
 	downloadCSV,
 	getColumns,
@@ -40,10 +41,14 @@ export default function DataTableWrap() {
 	const currentTheme =
 		settings?.preferredTheme === "dark" ? "black" : "default";
 
-	const data = removeArraysFromObjects(sample);
+	const [data, setData] = useState<object[]>(() =>
+		removeArraysFromObjects(sample),
+	);
+	const [cols, setCols] = useState<object[]>(() => getColumns(data));
 	const [selectedColumns, setSelectedColumns] = React.useState<string[]>(
 		Object.keys(data[0]),
 	);
+	const [groupedBy, setGroupedBy] = useState<string>("");
 
 	const handleColumnToggle = (column: string) => {
 		if (selectedColumns.includes(column)) {
@@ -53,32 +58,45 @@ export default function DataTableWrap() {
 		}
 	};
 
-	function changeColumnsOrder(newOrder: string[]) {
+	function changeColumnsOrder(newOrder: object[]) {
 		console.log("New order:", newOrder);
-		// setSelectedColumns(newOrder);
+		setCols(newOrder);
 	}
 
-	// Throttle function to limit the rate of function calls
-	const throttle = (func, limit) => {
-		let inThrottle;
-		return (...args) => {
-			if (!inThrottle) {
-				func(...args);
-				inThrottle = true;
-				setTimeout(() => (inThrottle = false), limit);
-			}
-		};
-	};
+	// // Throttle function to limit the rate of function calls
+	// const throttle = (func, limit) => {
+	// 	let inThrottle;
+	// 	return (...args) => {
+	// 		if (!inThrottle) {
+	// 			func(...args);
+	// 			inThrottle = true;
+	// 			setTimeout(() => (inThrottle = false), limit);
+	// 		}
+	// 	};
+	// };
 
-	const columns = getColumns(data);
-	const filteredColumns = columns.filter((col) =>
-		selectedColumns.includes(col.name.toLowerCase()),
+	const filteredColumns = useMemo(
+		() =>
+			cols.filter((col) => selectedColumns.includes(col.name.toLowerCase())),
+		[selectedColumns],
 	);
 
-	const changeColsSort = throttle((cols: object[]) => {
-		const newOrder = cols.map((col) => col.name.toLowerCase());
-		changeColumnsOrder(newOrder);
-	}, 500);
+	const handleGroupBy = (groupedBy) => {
+		const gData = aggregate(selectCols(data, selectedColumns), groupedBy);
+		console.log("Grouped data:", gData);
+		setData(gData);
+		setGroupedBy(groupedBy);
+	};
+
+	const handleDownload = (data, colsNameSorted) => {
+		const exportData = selectCols(data, colsNameSorted);
+		const fileName = `${uuidv7()}-export.csv`;
+		downloadCSV(exportData, fileName, colsNameSorted);
+	};
+
+	const colsNameSorted = cols
+		.map((col) => col.name.toLowerCase())
+		.filter((c) => selectedColumns.includes(c));
 
 	return (
 		<div className="m-10 p-10">
@@ -111,24 +129,64 @@ export default function DataTableWrap() {
 				fixedHeader={true}
 				fixedHeaderScrollHeight={"400px"}
 				responsive={true}
-				onColumnOrderChange={(cols) =>
-					changeColumnsOrder(cols.map((c) => c.name.toLowerCase()))
-				}
+				onColumnOrderChange={(cols) => changeColumnsOrder(cols)}
 				theme={currentTheme}
 			/>
 			<hr className="hr" />
-			<button
-				type="button"
-				className="btn btn-primary my-10"
-				onClick={() =>
-					downloadCSV(
-						selectCols(data, selectedColumns),
-						`${uuidv7()}-data-table-export.csv`,
-					)
-				}
-			>
-				Download CSV
-			</button>
+
+			<div className="my-10 flex">
+				<div className="mx-10">
+					<p>Showing {data.length} records.</p>
+				</div>
+				<div className="mx-10 block">
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={() => handleDownload(data, colsNameSorted)}
+					>
+						Download CSV
+					</button>
+				</div>
+
+				<div className="mx-10">
+					{!groupedBy ? (
+						<>
+							<p>Group by column:</p>
+							<select
+								className="select select-bordered w-full max-w-xs"
+								onChange={(e) => handleGroupBy(e.target.value)}
+							>
+								{filteredColumns.map((col) => (
+									<option key={col.name} value={col.name.toLowerCase()}>
+										{capitalize(col.name)}
+									</option>
+								))}
+							</select>
+						</>
+					) : (
+						<p className="mt-2">
+							Currently grouped by: {capitalize(groupedBy)}
+						</p>
+					)}
+				</div>
+
+				{/* <div className="my-10">
+				<p>Filter records by </p>
+				<select
+					className="select select-bordered w-full max-w-xs"
+					onChange={(e) => {
+						const value = e.target.value;
+						console.log("Selected filter:", value);
+					}}
+				>
+					{filteredColumns.map((col) => (
+						<option key={col.name} value={col.name.toLowerCase()}>
+							{capitalize(col.name)}
+						</option>
+					))}
+				</select>
+			</div> */}
+			</div>
 		</div>
 	);
 }
