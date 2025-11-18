@@ -1769,4 +1769,16 @@ const data = [
 			"https://images-na.ssl-images-amazon.com/images/M/MV5BNDc4MThhN2EtZjMzNC00ZDJmLThiZTgtNThlY2UxZWMzNjdkXkEyXkFqcGdeQXVyNDk3NzU2MTQ@._V1_SX300.jpg",
 	},
 ];
-export default data;
+
+const refined = data.map((movie) => {
+	return {
+		title: movie.title,
+		director: movie.director.split(", ").join("|"),
+		actors: movie.actors.split(", ").join("|"),
+		genres: movie.genres.join("|"),
+		plot: movie.plot,
+		runtime: parseInt(movie.runtime),
+		year: parseInt(movie.year),
+	};
+});
+await Bun.write(`./data/sample.json`, JSON.stringify(refined, null, 2));

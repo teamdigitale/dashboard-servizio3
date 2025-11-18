@@ -227,3 +227,20 @@ export function removeArraysFromObjects(data: object[]) {
 		return newItem;
 	});
 }
+
+export function getDistinctValues(data: object[], column: string) {
+	const distinctValues = Array.from(new Set(data.map((item) => item[column])));
+	return distinctValues;
+}
+
+// Throttle function to limit the rate of function calls
+const throttle = (func, limit) => {
+	let inThrottle;
+	return (...args) => {
+		if (!inThrottle) {
+			func(...args);
+			inThrottle = true;
+			setTimeout(() => (inThrottle = false), limit);
+		}
+	};
+};

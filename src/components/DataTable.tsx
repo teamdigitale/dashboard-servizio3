@@ -2,6 +2,8 @@
 import React, { useMemo, useState } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { uuidv7 } from "uuidv7";
+import sample from "../data/misure.json";
+import { filterByCondition } from "../lib/utils";
 import {
 	aggregate,
 	capitalize,
@@ -11,7 +13,6 @@ import {
 	selectCols,
 } from "../lib/utils.ts";
 import { useSettingsStore } from "../store/settings_store.ts";
-import sample from "./sample.ts";
 
 createTheme(
 	"black",
@@ -63,17 +64,44 @@ export default function DataTableWrap() {
 		setCols(newOrder);
 	}
 
-	// // Throttle function to limit the rate of function calls
-	// const throttle = (func, limit) => {
-	// 	let inThrottle;
-	// 	return (...args) => {
-	// 		if (!inThrottle) {
-	// 			func(...args);
-	// 			inThrottle = true;
-	// 			setTimeout(() => (inThrottle = false), limit);
-	// 		}
-	// 	};
-	// };
+	function filterDataByCondition(
+		data,
+		condition: { conditionType: string; value: string | number },
+	) {
+		if (isNaN(condition.value as number)) {
+			if (condition.conditionType === "equals") {
+				return data.filter(
+					(item) => item[condition.value as string] === condition.value,
+				);
+			} else {
+				return data;
+			}
+		}
+		switch (condition.conditionType) {
+			case "greaterThan":
+				return filterByCondition(
+					data,
+					condition.value as string,
+					(value) =>
+						typeof value === "number" && value > Number(condition.value),
+				);
+			case "lessThan":
+				return filterByCondition(
+					data,
+					condition.value as string,
+					(value) =>
+						typeof value === "number" && value < Number(condition.value),
+				);
+			case "equals":
+				return filterByCondition(
+					data,
+					condition.value as string,
+					(value) => value === condition.value,
+				);
+			default:
+				return data;
+		}
+	}
 
 	const filteredColumns = useMemo(
 		() =>
@@ -156,6 +184,7 @@ export default function DataTableWrap() {
 								className="select select-bordered w-full max-w-xs"
 								onChange={(e) => handleGroupBy(e.target.value)}
 							>
+								<option value="">-</option>
 								{filteredColumns.map((col) => (
 									<option key={col.name} value={col.name.toLowerCase()}>
 										{capitalize(col.name)}

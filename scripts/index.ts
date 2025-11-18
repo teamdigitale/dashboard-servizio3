@@ -212,10 +212,10 @@ async function chart1() {
 	console.log(uniq);
 
 	const aggregated = aggregate(data, "codice-univoco-submisura");
-	// await writeToFile(
-	// 	"pagamenti-per-sottomisura.json",
-	// 	JSON.stringify(toMatrixFormat(aggregated), null, 2),
-	// );
+	await writeToFile(
+		"pagamenti-per-sottomisura.json",
+		JSON.stringify(toMatrixFormat(aggregated), null, 2),
+	);
 	return aggregated;
 }
 async function chart2() {
@@ -243,15 +243,14 @@ async function chart2() {
 
 	const aggregated = aggregate(data, "codice-univoco-submisura");
 
-	// await writeToFile(
-	// 	"progetti-per-sottomisura.json",
-	// 	JSON.stringify(toMatrixFormat(aggregated), null, 2),
-	// );
+	await writeToFile(
+		"progetti-per-sottomisura.json",
+		JSON.stringify(toMatrixFormat(aggregated), null, 2),
+	);
 	return aggregated;
 }
 
-(async () => {
-	const start = Date.now();
+async function chart3() {
 	const d1 = await chart1(); // sottomisure e pagamenti totali del doeriodo temoprale
 	const d2 = await chart2(); // sottomisure e pagamenti totali del doeriodo temoprale
 	// await chart2(); // riportare le misure e interare i costi publici netti cpn i pagamenti  per ogni misura Finanziamento Totale Pubblico Netto
@@ -265,7 +264,26 @@ async function chart2() {
 
 	await writeToFile("rawData.json", JSON.stringify(d3, null, 2));
 
-	//chart3 per ente attuatore  costi
+	const data = selectCols(d3, [
+		"codice-univoco-misura",
+		"descrizione-misura",
+		"pagamenti-ammessi-pnrr-per-anno",
+		"finanziamento-totale-pubblico-netto",
+	]);
+
+	const aggregated = aggregate(data, "codice-univoco-misura");
+
+	await writeToFile(
+		"progetti-e-pagamenti-per-misura.json",
+		JSON.stringify(toMatrixFormat(aggregated), null, 2),
+	);
+	return aggregated;
+}
+
+(async () => {
+	const start = Date.now();
+	await chart3();
+	//chart4 per ente attuatore
 	const elapsed = Math.ceil((Date.now() - start) / 60000);
 	console.log("finished in", elapsed, "secs");
 })();
