@@ -1,6 +1,9 @@
 import DashChart from "../components/DashChart";
 
-const ids: string[] = [];
+const ids: string[] = [
+	"cmi5xjbnm0001csljehn8kqf4",
+	"cmhymzva40001ilfcv228hp1v",
+];
 
 function App() {
 	return (
@@ -15,17 +18,17 @@ function App() {
 					</div>
 				))}
 			</div> */}
-			<div className="grid grid-cols-1 gap-4 m-6 ml-2 ">
-				{[1].map((item) => (
+			{/* <div className="grid grid-cols-1 gap-4 m-6 ml-2 ">
+				{[ids].map((item) => (
 					<div
 						className="flex items-center justify-center w-full  h-94 bg-base-300 text-content rounded-md  shadow-md"
 						key={`fullChart-${item}`}
 					>
-						<DashChart id={"cmhymzva40001ilfcv228hp1v"} />
+						<DashChart id={item} />
 					</div>
 				))}
-			</div>
-			<div className="grid grid-cols-1 gap-4 m-6 ml-2 lg:grid-cols-2">
+			</div> */}
+			<div className="grid grid-cols-1 gap-4 m-6 ml-2 ">
 				{ids.map((id) => (
 					<div
 						className="flex ids-center justify-center w-full min-h-44 bg-base-300 text-content rounded-md  shadow-md"

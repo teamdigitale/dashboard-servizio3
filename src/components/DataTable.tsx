@@ -14,6 +14,8 @@ import {
 } from "../lib/utils.ts";
 import { useSettingsStore } from "../store/settings_store.ts";
 
+//group su più colonne. merging- column names
+
 createTheme(
 	"black",
 	{
