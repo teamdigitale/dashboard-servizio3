@@ -3,6 +3,7 @@
 import { D } from "@mobily/ts-belt";
 import Bun from "bun";
 import Papa from "papaparse";
+import { cleanupColumn } from "../src/lib/utils";
 
 function slugify(text: string) {
 	return text
@@ -50,7 +51,7 @@ export async function preprocess(file: string) {
 		return obj;
 	});
 
-	// console.log(json);
+	console.log(json);
 	return json as object[];
 }
 
@@ -108,17 +109,17 @@ function getUniqValues(array, field) {
 	return values;
 }
 
-function cleanupColumn(
-	data: object[],
-	prop: string,
-	f: (value: string | number) => number,
-) {
-	const result = data.map((item: object) => {
-		item[prop] = f(item[prop]);
-		return item;
-	});
-	return result;
-}
+// function cleanupColumn(
+// 	data: object[],
+// 	prop: string,
+// 	f: (value: string | number) => number,
+// ) {
+// 	const result = data.map((item: object) => {
+// 		item[prop] = f(item[prop]);
+// 		return item;
+// 	});
+// 	return result;
+// }
 
 function getUniqFieldValues(array, field) {
 	return Object.keys(
@@ -172,6 +173,11 @@ function cleanupCurrency(value: string | number) {
 		.trim();
 
 	return Number(num);
+}
+
+function cleanupPerc(value: string | number) {
+	const num = `${value}` satisfies string;
+	return parseInt(Math.floor(Number(num)));
 }
 
 function cleanCurrencyFields(fields: string[], data: object[]) {
@@ -280,9 +286,27 @@ async function chart3() {
 	return aggregated;
 }
 
+async function fse() {
+	const fileName = "20251104_Tabella_riassuntiva_vs_2Q-2025.csv";
+	const rawData = await preprocess(fileName);
+	const fields = [
+		"indicatore-1",
+		"indicatore-2",
+		"indicatore-3",
+		"indicatore-4",
+	];
+	const data = selectCols(rawData, ["regione", ...fields]);
+	let cleaned = data;
+	fields.forEach((field) => {
+		cleaned = cleanupColumn(cleaned, field, cleanupCurrency);
+	});
+
+	await writeToFile("fse.json", JSON.stringify(cleaned, null, 2));
+}
+
 (async () => {
 	const start = Date.now();
-	await chart3();
+	await fse();
 	//chart4 per ente attuatore
 	const elapsed = Math.ceil((Date.now() - start) / 60000);
 	console.log("finished in", elapsed, "secs");

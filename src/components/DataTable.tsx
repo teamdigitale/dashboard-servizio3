@@ -2,8 +2,9 @@
 import React, { useMemo, useState } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { uuidv7 } from "uuidv7";
-import sample from "../data/misure.json";
-import { filterByCondition } from "../lib/utils";
+import sourceData from "../data/fse.json";
+import type Filter from "../lib/utils";
+import { filterDataByCondition } from "../lib/utils";
 import {
 	aggregate,
 	capitalize,
@@ -13,6 +14,7 @@ import {
 	selectCols,
 } from "../lib/utils.ts";
 import { useSettingsStore } from "../store/settings_store.ts";
+import FilterValues from "./FilterValues";
 
 //group su più colonne. merging- column names
 
@@ -45,13 +47,14 @@ export default function DataTableWrap() {
 		settings?.preferredTheme === "dark" ? "black" : "default";
 
 	const [data, setData] = useState<object[]>(() =>
-		removeArraysFromObjects(sample),
+		removeArraysFromObjects(sourceData),
 	);
 	const [cols, setCols] = useState<object[]>(() => getColumns(data));
 	const [selectedColumns, setSelectedColumns] = React.useState<string[]>(
 		Object.keys(data[0]),
 	);
 	const [groupedBy, setGroupedBy] = useState<string>("");
+	const [filters, setFilters] = useState<Filter[]>();
 
 	const handleColumnToggle = (column: string) => {
 		if (selectedColumns.includes(column)) {
@@ -64,45 +67,6 @@ export default function DataTableWrap() {
 	function changeColumnsOrder(newOrder: object[]) {
 		console.log("New order:", newOrder);
 		setCols(newOrder);
-	}
-
-	function filterDataByCondition(
-		data,
-		condition: { conditionType: string; value: string | number },
-	) {
-		if (isNaN(condition.value as number)) {
-			if (condition.conditionType === "equals") {
-				return data.filter(
-					(item) => item[condition.value as string] === condition.value,
-				);
-			} else {
-				return data;
-			}
-		}
-		switch (condition.conditionType) {
-			case "greaterThan":
-				return filterByCondition(
-					data,
-					condition.value as string,
-					(value) =>
-						typeof value === "number" && value > Number(condition.value),
-				);
-			case "lessThan":
-				return filterByCondition(
-					data,
-					condition.value as string,
-					(value) =>
-						typeof value === "number" && value < Number(condition.value),
-				);
-			case "equals":
-				return filterByCondition(
-					data,
-					condition.value as string,
-					(value) => value === condition.value,
-				);
-			default:
-				return data;
-		}
 	}
 
 	const filteredColumns = useMemo(
@@ -199,6 +163,15 @@ export default function DataTableWrap() {
 							Currently grouped by: {capitalize(groupedBy)}
 						</p>
 					)}
+				</div>
+
+				<div className="mx-10">
+					<p>Filters</p>
+					<FilterValues
+						cols={filteredColumns}
+						filters={filters}
+						handleChange={(f) => setFilters(f)}
+					/>
 				</div>
 
 				{/* <div className="my-10">

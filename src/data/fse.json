@@ -1,0 +1,156 @@
+[
+  {
+    "regione": "Abruzzo",
+    "indicatore-1": 94.01,
+    "indicatore-2": 98.37,
+    "indicatore-3": 92.88,
+    "indicatore-4": 92.88
+  },
+  {
+    "regione": "Basilicata",
+    "indicatore-1": 93.21,
+    "indicatore-2": 96.3,
+    "indicatore-3": 96.87,
+    "indicatore-4": 96.87
+  },
+  {
+    "regione": "Calabria",
+    "indicatore-1": 80,
+    "indicatore-2": 92.28,
+    "indicatore-3": 99.72,
+    "indicatore-4": 99.17
+  },
+  {
+    "regione": "Campania",
+    "indicatore-1": 99.89,
+    "indicatore-2": 88.13,
+    "indicatore-3": 90.78,
+    "indicatore-4": 90.5
+  },
+  {
+    "regione": "Emilia-Romagna",
+    "indicatore-1": 98.77,
+    "indicatore-2": 99.22,
+    "indicatore-3": 98.12,
+    "indicatore-4": 86.01
+  },
+  {
+    "regione": "Friuli Venezia Giulia",
+    "indicatore-1": 99.24,
+    "indicatore-2": 86.29,
+    "indicatore-3": 92.44,
+    "indicatore-4": 92.44
+  },
+  {
+    "regione": "Lazio",
+    "indicatore-1": 83.29,
+    "indicatore-2": 96.8,
+    "indicatore-3": 91.27,
+    "indicatore-4": 91.26
+  },
+  {
+    "regione": "Liguria",
+    "indicatore-1": 89.68,
+    "indicatore-2": 91.74,
+    "indicatore-3": 90.09,
+    "indicatore-4": 87.15
+  },
+  {
+    "regione": "Lombardia",
+    "indicatore-1": 100,
+    "indicatore-2": 90.8,
+    "indicatore-3": 67.67,
+    "indicatore-4": 67.67
+  },
+  {
+    "regione": "Marche",
+    "indicatore-1": 90.45,
+    "indicatore-2": 80.16,
+    "indicatore-3": 91.96,
+    "indicatore-4": 69.99
+  },
+  {
+    "regione": "Molise",
+    "indicatore-1": 41.07,
+    "indicatore-2": 100,
+    "indicatore-3": 100,
+    "indicatore-4": 100
+  },
+  {
+    "regione": "P.A. Bolzano",
+    "indicatore-1": 99.35,
+    "indicatore-2": 97.57,
+    "indicatore-3": 80.71,
+    "indicatore-4": 73.28
+  },
+  {
+    "regione": "P.A. Trento",
+    "indicatore-1": 98.51,
+    "indicatore-2": 96.84,
+    "indicatore-3": 94.97,
+    "indicatore-4": 78.84
+  },
+  {
+    "regione": "Piemonte",
+    "indicatore-1": 99.6,
+    "indicatore-2": 99.14,
+    "indicatore-3": 89.27,
+    "indicatore-4": 89.27
+  },
+  {
+    "regione": "Puglia",
+    "indicatore-1": 83.35,
+    "indicatore-2": 98.53,
+    "indicatore-3": 93.55,
+    "indicatore-4": 93.55
+  },
+  {
+    "regione": "Sardegna",
+    "indicatore-1": 98.34,
+    "indicatore-2": 91.78,
+    "indicatore-3": 99.82,
+    "indicatore-4": 81.34
+  },
+  {
+    "regione": "Sicilia",
+    "indicatore-1": 97.33,
+    "indicatore-2": 89.86,
+    "indicatore-3": 88.25,
+    "indicatore-4": 87.85
+  },
+  {
+    "regione": "Toscana",
+    "indicatore-1": 90.71,
+    "indicatore-2": 89.32,
+    "indicatore-3": 85.41,
+    "indicatore-4": 85.41
+  },
+  {
+    "regione": "Umbria",
+    "indicatore-1": 84.82,
+    "indicatore-2": 98.21,
+    "indicatore-3": 99.97,
+    "indicatore-4": 88.6
+  },
+  {
+    "regione": "Valle d'Aosta",
+    "indicatore-1": 99.38,
+    "indicatore-2": 94.38,
+    "indicatore-3": 98.34,
+    "indicatore-4": 98.34
+  },
+  {
+    "regione": "Veneto",
+    "indicatore-1": 98.19,
+    "indicatore-2": 94.74,
+    "indicatore-3": 96.84,
+    "indicatore-4": 96.77
+  },
+  {
+    "regione": "ITALIA",
+    "indicatore-1": 94.26,
+    "indicatore-2": 93.1,
+    "indicatore-3": 87.19,
+    "indicatore-4": 84.29
+  }
+]

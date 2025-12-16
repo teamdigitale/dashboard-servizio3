@@ -111,6 +111,43 @@ export function filterByCondition(
 	});
 	return result;
 }
+type T = object;
+export type Filter = {
+	key: keyof T;
+	conditionType: string;
+	value: string | number;
+};
+export function filterDataByCondition(data: [T], condition: Filter) {
+	if (isNaN(condition.value as number)) {
+		if (condition.conditionType === "equals") {
+			return data.filter((item: T) => item[condition.key] === condition.value);
+		} else {
+			return data;
+		}
+	}
+	switch (condition.conditionType) {
+		case "greaterThan":
+			return filterByCondition(
+				data,
+				condition.key,
+				(value) => typeof value === "number" && value > Number(condition.value),
+			);
+		case "lessThan":
+			return filterByCondition(
+				data,
+				condition.key,
+				(value) => typeof value === "number" && value < Number(condition.value),
+			);
+		case "equals":
+			return filterByCondition(
+				data,
+				condition.key,
+				(value) => value == condition.value,
+			);
+		default:
+			return data;
+	}
+}
 
 export function removeCols(data: object[], toRemove: string[]) {
 	return data.map((item: object) => {
