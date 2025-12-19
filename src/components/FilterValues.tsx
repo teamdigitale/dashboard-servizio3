@@ -45,7 +45,7 @@ export default function FilterValues(
 				<div className="flex">
 					<select name="key" required>
 						<option value="">-</option>
-						{cols.map((n: string) => (
+						{cols?.map((n: string) => (
 							<option value={n} key={n}>
 								{n}
 							</option>

@@ -167,11 +167,11 @@ export default function DataTableWrap() {
 
 				<div className="mx-10">
 					<p>Filters</p>
-					<FilterValues
-						cols={filteredColumns}
+					{/* <FilterValues
+						cols={filteredColumns.map((c) => c.name)}
 						filters={filters}
 						handleChange={(f) => setFilters(f)}
-					/>
+					/> */}
 				</div>
 
 				{/* <div className="my-10">

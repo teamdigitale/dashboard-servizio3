@@ -1,6 +1,15 @@
 import DashChart from "../components/DashChart";
 
-const ids: string[] = ["cmj2xfi2u000501jkel2fyukk"];
+const ids: string[] = [
+	"cmj8p2ni0000201fab8walcjs",
+	"cmj8p3w5w000301fauxoo8q77",
+	"cmj8p84c4000401fareuyqzs2",
+	"cmj8p96vj000501fam0rgzn7e",
+	"cmjd4bd490001bytcw7kplu1v",
+	"cmjd4glgv0003bytcftfo56n6",
+	"cmjd4j7vl0005bytc7e6eyjlj",
+	"cmjd56jn00001jzmpr7bgn3sk",
+];
 
 function App() {
 	return (
