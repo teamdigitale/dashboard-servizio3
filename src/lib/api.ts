@@ -1,5 +1,10 @@
 import axios from "axios";
-axios.defaults.withCredentials = true;
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? "http://localhost:3000";
+
+axios.defaults.baseURL = SERVER_URL;
+// axios.defaults.withCredentials = true;
+
 
 /** getSuggestions */
 export async function getSuggestions(inputData: (string | number)[][]) {
