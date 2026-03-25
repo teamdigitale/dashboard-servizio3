@@ -8,7 +8,7 @@ import Data from "./routes/Data.tsx";
 import Fse from "./routes/Fse.tsx";
 import Login from "./routes/Login.tsx";
 import PA26 from "./routes/PA26.tsx";
-import Teseo from "./routes/teseo.tsx";
+import Teseo from "./routes/Teseo.tsx";
 
 const paths = [
 	{

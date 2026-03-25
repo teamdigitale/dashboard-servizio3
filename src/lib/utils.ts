@@ -7,7 +7,7 @@ export function toMatrixFormat(data: object[]) {
 }
 
 export function convertArrayOfObjectsToCSV(
-	array: object[][],
+	array: object[],
 	sortedKeys?: string[],
 ) {
 	let result = "";
@@ -37,7 +37,7 @@ export function convertArrayOfObjectsToCSV(
 
 // Blatant "inspiration" from https://codepen.io/Jacqueline34/pen/pyVoWr
 export function downloadCSV(
-	array: object[][],
+	array: object[],
 	filename: string,
 	sortedKeys?: string[],
 ) {
@@ -58,7 +58,14 @@ export function capitalize(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function getColumns(data: object[]) {
+export type Col = {
+	name: string;
+	selector: (row: object) => string;
+	sortable: boolean;
+	reorder: boolean;
+};
+
+export function getColumns(data: object[]): Col[] {
 	return Object.keys(data[0]).map((key) => ({
 		name: key,
 		selector: (row: object) => row[key as keyof object] as string,
@@ -158,9 +165,9 @@ export function removeCols(data: object[], toRemove: string[]) {
 	});
 }
 
-export function selectCols(data: object[], keys: readonly string[]) {
+export function selectCols(data: object[], keys: readonly string[]): object[] {
 	return data.map((item: object) => {
-		return D.selectKeys(item, keys as readonly never[]);
+		return D.selectKeys(item, keys as readonly never[]) as object;
 	});
 }
 
@@ -176,9 +183,9 @@ export function cleanupColumn(
 	return result;
 }
 
-export function getUniqValues(array, field) {
+export function getUniqValues(array, field: string) {
 	const set = new Set(array.map((i) => i[field]));
-	const values = [];
+	const values: unknown[] = [];
 	for (const v of set) {
 		values.push(v);
 	}

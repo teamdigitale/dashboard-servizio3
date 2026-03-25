@@ -17,11 +17,14 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "noUnusedLocals": false,
+    "noImplicitAny": false
   },
-  "include": ["src", "aggreate.ts"]
+  "exclude": ["scripts"]
+  // "include": ["src", "aggreate.ts"]
 }

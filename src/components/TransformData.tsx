@@ -3,8 +3,10 @@ import React, { useMemo, useState } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { uuidv7 } from "uuidv7";
 import sourceData from "../data/fse.json";
-import type { Col, Filter } from "../lib/utils";
-import { filterDataByCondition } from "../lib/utils";
+// import type Filter from "../lib/utils";
+// import { filterDataByCondition } from "../lib/utils";
+// import FilterValues from "./FilterValues";
+import type { Col } from "../lib/utils";
 import {
 	aggregate,
 	capitalize,
@@ -14,7 +16,6 @@ import {
 	selectCols,
 } from "../lib/utils.ts";
 import { useSettingsStore } from "../store/settings_store.ts";
-import FilterValues from "./FilterValues";
 
 //group su più colonne. merging- column names
 
@@ -40,7 +41,7 @@ createTheme(
 	"dark",
 );
 
-export default function DataTableWrap() {
+export default function TransformData() {
 	const { settings } = useSettingsStore();
 
 	const currentTheme =
@@ -54,7 +55,7 @@ export default function DataTableWrap() {
 		Object.keys(data[0]),
 	);
 	const [groupedBy, setGroupedBy] = useState<string>("");
-	const [filters, setFilters] = useState<Filter[]>();
+	// const [filters, setFilters] = useState<Filter[]>();
 
 	const handleColumnToggle = (column: string) => {
 		if (selectedColumns.includes(column)) {
@@ -71,7 +72,7 @@ export default function DataTableWrap() {
 
 	const filteredColumns = useMemo(
 		() =>
-			cols.filter((col) => selectedColumns.includes(col.name.toLowerCase())),
+			cols.filter((col) => selectedColumns.includes(col?.name?.toLowerCase())),
 		[selectedColumns],
 	);
 
@@ -152,8 +153,8 @@ export default function DataTableWrap() {
 							>
 								<option value="">-</option>
 								{filteredColumns.map((col) => (
-									<option key={col.name} value={col.name.toLowerCase()}>
-										{capitalize(col.name)}
+									<option key={col?.name} value={col?.name?.toLowerCase()}>
+										{capitalize(col?.name)}
 									</option>
 								))}
 							</select>

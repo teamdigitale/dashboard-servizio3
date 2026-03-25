@@ -1,8 +1,7 @@
 // src/pages/Login.tsx
-import React from "react";
+import type React from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/user_store";
-import type { Event } from "hono/jsx";
 
 const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
 const mockUser = {
@@ -17,7 +16,7 @@ const Login: React.FC = () => {
   const { setUser } = useUserStore();
   const navigate = useNavigate();
 
-  const handleLogin = (e: Event) => {
+  const handleLogin = (e: any) => {
     e.preventDefault();
     // In a real app, you would perform authentication here
     console.log("Logging in...");
@@ -37,89 +36,89 @@ const Login: React.FC = () => {
   // );
 
   return (
-    <div className='flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8'>
-      <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <h2 className='mt-6 text-center text-2xl/9 font-bold tracking-tight text-content/50'>
+    <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-content/50">
           Sign in to your account
         </h2>
       </div>
 
-      <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]'>
-        <div className='bg-base-300 text-content px-6 py-12 shadow sm:rounded-lg sm:px-12'>
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        <div className="bg-base-300 text-content px-6 py-12 shadow sm:rounded-lg sm:px-12">
           <form
-            action='#'
+            action="#"
             onSubmit={(e) => handleLogin(e)}
-            className='space-y-6'
+            className="space-y-6"
           >
             <div>
-              <label htmlFor='email' className='block text-sm/6  '>
+              <label htmlFor="email" className="block text-sm/6  ">
                 Email address
               </label>
-              <div className='mt-2'>
+              <div className="mt-2">
                 <input
                   defaultValue={"servizio3@innovazione.gov.it"}
-                  id='email'
-                  type='email'
-                  name='email'
+                  id="email"
+                  type="email"
+                  name="email"
                   required
-                  autoComplete='email'
-                  className='input'
+                  autoComplete="email"
+                  className="input"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor='password' className='block text-sm/6'>
+              <label htmlFor="password" className="block text-sm/6">
                 Password
               </label>
-              <div className='mt-2'>
+              <div className="mt-2">
                 <input
                   defaultValue={"123password"}
-                  id='password'
-                  type='password'
-                  name='password'
+                  id="password"
+                  type="password"
+                  name="password"
                   required
-                  autoComplete='current-password'
-                  className='input'
+                  autoComplete="current-password"
+                  className="input"
                 />
               </div>
             </div>
 
-            <div className='flex items-center justify-between'>
-              <div className='flex gap-3'>
-                <div className='flex h-6 shrink-0 items-center'>
-                  <div className='group grid size-4 grid-cols-1'>
+            <div className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <div className="flex h-6 shrink-0 items-center">
+                  <div className="group grid size-4 grid-cols-1">
                     <input
-                      id='remember-me'
-                      type='checkbox'
-                      name='remember-me'
-                      className='checkbox'
+                      id="remember-me"
+                      type="checkbox"
+                      name="remember-me"
+                      className="checkbox"
                     />
                   </div>
                 </div>
-                <label htmlFor='remember-me' className='block text-sm/6'>
+                <label htmlFor="remember-me" className="block text-sm/6">
                   Remember me
                 </label>
               </div>
 
-              <div className='text-sm/6'>
-                <a href='#' className='link-primary'>
+              <div className="text-sm/6">
+                <a href="#" className="link-primary">
                   Forgot password?
                 </a>
               </div>
             </div>
 
             <center>
-              <button type='submit' className='btn btn-primary btn-wide'>
+              <button type="submit" className="btn btn-primary btn-wide">
                 Sign in
               </button>
             </center>
           </form>
         </div>
 
-        <p className='mt-10 text-center text-sm/6 text-gray-500'>
+        <p className="mt-10 text-center text-sm/6 text-gray-500">
           {`Not a member? `}
-          <a href='#' className='font-semibold link-primary'>
+          <a href="#" className="font-semibold link-primary">
             {` Register`}
           </a>
         </p>

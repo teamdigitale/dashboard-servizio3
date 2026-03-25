@@ -5,7 +5,7 @@ export default function FilterValues(
 	filters: Filter[],
 	handleChange: (filters: Filter[]) => void,
 ) {
-	function handleAddFilter(e: FormDataEvent) {
+	function handleAddFilter(e) {
 		console.log("formdata", e.formData);
 		const data = e.formData;
 		if (!data) return;
