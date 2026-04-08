@@ -1,3 +1,4 @@
+import "dataviz-components/dist/style.css";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -6,6 +7,7 @@ import ProtectedRoute from "./components/layout/ProtectedRoute.tsx";
 import App from "./routes/App.tsx";
 import Data from "./routes/Data.tsx";
 import Fse from "./routes/Fse.tsx";
+import HR from "./routes/HR.tsx";
 import Login from "./routes/Login.tsx";
 import PA26 from "./routes/PA26.tsx";
 import Teseo from "./routes/Teseo.tsx";
@@ -40,6 +42,14 @@ const paths = [
 		element: (
 			<ProtectedRoute>
 				<Teseo />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: "/hr",
+		element: (
+			<ProtectedRoute>
+				<HR />
 			</ProtectedRoute>
 		),
 	},

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashChart from "../components/DashChart";
+import FseSnapshotTable from "../components/FseSnapshotTable";
 
 const idMaps: string[] = [
 	"cmjd4bd490001bytcw7kplu1v",
@@ -168,6 +169,8 @@ function App() {
 	const choosen = groups.find((g) => g.id === selected);
 	return (
 		<div>
+			<FseSnapshotTable />
+
 			<select
 				className="select select-bordered w-full max-w-xs m-6 ml-2"
 				onChange={(e) => handleSelect(e.target.value)}

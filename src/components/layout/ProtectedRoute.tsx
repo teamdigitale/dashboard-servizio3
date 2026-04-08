@@ -68,6 +68,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 						TESEO
 					</a>
 				</div>
+				<div className="mb-3">
+					<a
+						href="/hr"
+						className={`btn ${
+							path.indexOf("/hr") >= 0 ? "btn-active" : "btn"
+						} `}
+					>
+						HR
+					</a>
+				</div>
 			</div>
 			<div className="w-full h-full overflow-y-auto">{children}</div>
 		</div>

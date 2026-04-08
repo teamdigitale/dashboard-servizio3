@@ -15,7 +15,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
     "daisyui": "^5.0.50",
-    "dataviz-components": "^0.2.27",
+    "dataviz-components": "^0.3.21",
     "react": "^19.1.1",
     "react-data-table-component": "^7.7.0",
     "react-dom": "^19.1.1",
