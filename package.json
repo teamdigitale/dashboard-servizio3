@@ -13,7 +13,7 @@
     "@mobily/ts-belt": "^3.13.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.12",
-    "axios": "^1.11.0",
+    "axios": "^1.15.0",
     "daisyui": "^5.0.50",
     "dataviz-components": "^0.3.21",
     "react": "^19.1.1",
